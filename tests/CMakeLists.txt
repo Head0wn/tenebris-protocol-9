@@ -1,8 +1,13 @@
 add_executable(tenebris_core_tests ApplicationTests.cpp)
-
 target_link_libraries(tenebris_core_tests PRIVATE Tenebris::Core)
 target_compile_features(tenebris_core_tests PRIVATE cxx_std_20)
 tenebris_set_project_warnings(tenebris_core_tests)
 
+add_executable(tenebris_platform_tests PlatformSystemTests.cpp)
+target_link_libraries(tenebris_platform_tests PRIVATE Tenebris::Platform)
+target_compile_features(tenebris_platform_tests PRIVATE cxx_std_20)
+tenebris_set_project_warnings(tenebris_platform_tests)
+
 add_test(NAME tenebris.core.lifecycle COMMAND tenebris_core_tests)
+add_test(NAME tenebris.platform.headless COMMAND tenebris_platform_tests)
 add_test(NAME tenebris.game.smoke COMMAND tenebris --headless-smoke-test)

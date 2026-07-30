@@ -1,4 +1,5 @@
 #include <tenebris/core/Application.hpp>
+#include <tenebris/platform/PlatformSystem.hpp>
 
 #include <algorithm>
 #include <iostream>
@@ -20,8 +21,21 @@ int main(int argc, char** argv) {
     const bool smokeTest = hasArgument(argc, argv, "--headless-smoke-test");
 
     if (hasArgument(argc, argv, "--version")) {
-        std::cout << "TENEBRIS 0.1.0\n";
+        std::cout << "TENEBRIS 0.2.0\n";
         return 0;
+    }
+
+    tenebris::platform::PlatformSystem platform({
+        .title = "TENEBRIS — Le Protocole 9",
+        .width = 1600,
+        .height = 900,
+        .resizable = true,
+        .highPixelDensity = true,
+    });
+
+    if (!platform.initialize(smokeTest)) {
+        std::cerr << platform.lastError() << '\n';
+        return 1;
     }
 
     tenebris::core::Application application({
@@ -31,29 +45,31 @@ int main(int argc, char** argv) {
 
     if (!application.initialize()) {
         std::cerr << "TENEBRIS failed to initialize.\n";
-        return 1;
+        return 2;
     }
 
-    const std::uint64_t frameBudget = smokeTest ? 3U : 1U;
-    for (std::uint64_t frame = 0; frame < frameBudget; ++frame) {
-        if (!application.tick()) {
-            std::cerr << "TENEBRIS runtime stopped unexpectedly.\n";
-            return 2;
+    while (application.state() != tenebris::core::ApplicationState::Stopped) {
+        if (application.state() == tenebris::core::ApplicationState::Running && !platform.pumpEvents()) {
+            application.requestShutdown();
         }
+
+        const bool frameExecuted = application.tick();
+        if (smokeTest && frameExecuted && application.frameIndex() >= 3U) {
+            application.requestShutdown();
+        }
+
+        if (!frameExecuted && application.state() != tenebris::core::ApplicationState::Stopped) {
+            std::cerr << "TENEBRIS runtime stopped unexpectedly.\n";
+            return 3;
+        }
+
+        platform.delay(1U);
     }
 
-    application.requestShutdown();
-    static_cast<void>(application.tick());
-
-    if (application.state() != tenebris::core::ApplicationState::Stopped) {
-        std::cerr << "TENEBRIS did not shut down cleanly.\n";
-        return 3;
-    }
+    platform.shutdown();
 
     if (smokeTest) {
         std::cout << "TENEBRIS smoke test passed after " << application.frameIndex() << " frames.\n";
-    } else {
-        std::cout << "TENEBRIS engine foundation initialized successfully.\n";
     }
 
     return 0;
