@@ -1,6 +1,7 @@
 #include <tenebris/core/Application.hpp>
 #include <tenebris/platform/PlatformSystem.hpp>
 #include <tenebris/renderer/RendererSystem.hpp>
+#include <tenebris/scene/RenderScene.hpp>
 
 #include <algorithm>
 #include <cstdint>
@@ -22,11 +23,26 @@ namespace {
 int main(int argc, char** argv) {
     const bool headlessSmokeTest = hasArgument(argc, argv, "--headless-smoke-test");
     const bool gpuSmokeTest = hasArgument(argc, argv, "--gpu-smoke-test");
+    const bool printSceneStats = hasArgument(argc, argv, "--scene-stats");
     constexpr std::uint64_t gpuSmokeFrameBudget = 300U;
 
     if (hasArgument(argc, argv, "--version")) {
-        std::cout << "TENEBRIS 0.3.0\n";
+        std::cout << "TENEBRIS 0.5.0\n";
         return 0;
+    }
+
+    const tenebris::scene::SceneAsset site47Blockout = tenebris::scene::buildSite47Blockout();
+    if (site47Blockout.renderMesh.empty() || !site47Blockout.renderMesh.hasValidIndices()
+        || !tenebris::scene::isFinite(site47Blockout.camera.viewProjectionMatrix())) {
+        std::cerr << "TENEBRIS failed to build the deterministic Site 47 render scene.\n";
+        return 1;
+    }
+
+    if (printSceneStats || headlessSmokeTest) {
+        std::cout << "Site 47 render scene: " << site47Blockout.chunk.solidCount() << " solid voxels, "
+                  << site47Blockout.renderMesh.vertices.size() << " vertices, "
+                  << site47Blockout.renderMesh.triangleCount() << " triangles, hash "
+                  << tenebris::scene::stableRenderMeshHash(site47Blockout.renderMesh) << ".\n";
     }
 
     tenebris::platform::PlatformSystem platform({
@@ -40,7 +56,7 @@ int main(int argc, char** argv) {
 
     if (!platform.initialize(headlessSmokeTest)) {
         std::cerr << platform.lastError() << '\n';
-        return 1;
+        return 2;
     }
 
 #ifndef NDEBUG
@@ -58,7 +74,7 @@ int main(int argc, char** argv) {
     if (!renderer.initialize(platform.window(), headlessSmokeTest)) {
         std::cerr << renderer.lastError() << '\n';
         platform.shutdown();
-        return 2;
+        return 3;
     }
 
     tenebris::core::Application application({
@@ -70,7 +86,7 @@ int main(int argc, char** argv) {
         std::cerr << "TENEBRIS failed to initialize.\n";
         renderer.shutdown();
         platform.shutdown();
-        return 3;
+        return 4;
     }
 
     bool runtimeFailure = false;
@@ -122,5 +138,5 @@ int main(int argc, char** argv) {
                   << " swapchain rebuilds.\n";
     }
 
-    return runtimeFailure ? 4 : 0;
+    return runtimeFailure ? 5 : 0;
 }
