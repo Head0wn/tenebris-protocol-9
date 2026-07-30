@@ -34,6 +34,7 @@ bool PlatformSystem::initialize(bool headless) {
 
     lastError_.clear();
     headless_ = headless;
+    framebufferResized_ = false;
 
     if (headless_) {
         initialized_ = true;
@@ -102,9 +103,18 @@ bool PlatformSystem::pumpEvents() noexcept {
         if (event.type == SDL_EVENT_QUIT || event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED) {
             return false;
         }
+        if (event.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
+            framebufferResized_ = true;
+        }
     }
 
     return true;
+}
+
+bool PlatformSystem::consumeFramebufferResize() noexcept {
+    const bool resized = framebufferResized_;
+    framebufferResized_ = false;
+    return resized;
 }
 
 void PlatformSystem::delay(std::uint32_t milliseconds) const noexcept {
@@ -131,6 +141,7 @@ void PlatformSystem::shutdown() noexcept {
 
     initialized_ = false;
     headless_ = false;
+    framebufferResized_ = false;
 }
 
 bool PlatformSystem::isInitialized() const noexcept {
