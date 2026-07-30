@@ -56,12 +56,11 @@ jobs:
           grep -q "OpDecorate.*Location 2" build/shaders/voxel.vert.spvasm
           grep -q "PushConstant" build/shaders/voxel.vert.spvasm
 
-      - name: Upload validated shaders
-        uses: actions/upload-artifact@v4
-        with:
-          name: tenebris-voxel-shaders
-          path: |
-            build/shaders/voxel.vert.spv
-            build/shaders/voxel.frag.spv
-          if-no-files-found: error
-          retention-days: 14
+      - name: Report validated shader fingerprints
+        run: |
+          sha256sum build/shaders/voxel.vert.spv build/shaders/voxel.frag.spv
+          printf 'TENEBRIS_VERTEX_SPV_BASE64='
+          base64 --wrap=0 build/shaders/voxel.vert.spv
+          printf '\nTENEBRIS_FRAGMENT_SPV_BASE64='
+          base64 --wrap=0 build/shaders/voxel.frag.spv
+          printf '\n'
