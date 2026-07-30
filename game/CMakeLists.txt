@@ -7,6 +7,7 @@ target_link_libraries(
         Tenebris::Core
         Tenebris::Platform
         Tenebris::Renderer
+        Tenebris::Scene
 )
 target_compile_features(tenebris PRIVATE cxx_std_20)
 tenebris_set_project_warnings(tenebris)
