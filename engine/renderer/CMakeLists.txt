@@ -28,3 +28,11 @@ target_link_libraries(
 )
 target_compile_features(tenebris_renderer PUBLIC cxx_std_20)
 tenebris_set_project_warnings(tenebris_renderer)
+
+# Vulkan's C ABI exposes several flag enums as signed integral values. The renderer
+# keeps all other warnings fatal while isolating the two deliberate boundary cases.
+if(MSVC)
+    target_compile_options(tenebris_renderer PRIVATE /wd4834)
+else()
+    target_compile_options(tenebris_renderer PRIVATE -Wno-unused-result -Wno-sign-conversion)
+endif()
