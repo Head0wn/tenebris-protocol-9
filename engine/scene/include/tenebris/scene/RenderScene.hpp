@@ -57,7 +57,8 @@ struct CameraConfig final {
 
 class SceneCamera final {
 public:
-    explicit SceneCamera(CameraConfig config = {});
+    SceneCamera() = default;
+    explicit SceneCamera(CameraConfig config);
 
     [[nodiscard]] bool setConfig(CameraConfig config) noexcept;
     [[nodiscard]] const CameraConfig& config() const noexcept;
