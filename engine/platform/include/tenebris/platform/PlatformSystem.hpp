@@ -13,6 +13,7 @@ struct PlatformConfig final {
     std::int32_t height{900};
     bool resizable{true};
     bool highPixelDensity{true};
+    bool vulkan{true};
 };
 
 class PlatformSystem final {
@@ -32,6 +33,7 @@ public:
 
     [[nodiscard]] bool isInitialized() const noexcept;
     [[nodiscard]] bool isHeadless() const noexcept;
+    [[nodiscard]] bool isVulkanLoaded() const noexcept;
     [[nodiscard]] SDL_Window* window() const noexcept;
     [[nodiscard]] const std::string& lastError() const noexcept;
 
@@ -42,6 +44,7 @@ private:
     bool initialized_{false};
     bool headless_{false};
     bool sdlInitialized_{false};
+    bool vulkanLoaded_{false};
 };
 
 } // namespace tenebris::platform
