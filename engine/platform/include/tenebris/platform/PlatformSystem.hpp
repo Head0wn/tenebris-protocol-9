@@ -28,6 +28,7 @@ public:
 
     [[nodiscard]] bool initialize(bool headless);
     [[nodiscard]] bool pumpEvents() noexcept;
+    [[nodiscard]] bool consumeFramebufferResize() noexcept;
     void delay(std::uint32_t milliseconds) const noexcept;
     void shutdown() noexcept;
 
@@ -45,6 +46,7 @@ private:
     bool headless_{false};
     bool sdlInitialized_{false};
     bool vulkanLoaded_{false};
+    bool framebufferResized_{false};
 };
 
 } // namespace tenebris::platform
