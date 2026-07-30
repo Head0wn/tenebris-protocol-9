@@ -29,6 +29,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Install SDL3 Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            pkg-config \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev \
+            libxfixes-dev libxi-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols \
+            libdecor-0-dev libudev-dev
+
       - name: Configure
         run: >-
           cmake -S . -B build
