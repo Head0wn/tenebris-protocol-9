@@ -6,12 +6,14 @@ target_sources(
     tenebris_scene
     PRIVATE
         src/RenderScene.cpp
+        src/GpuUploadPlan.cpp
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS include
         FILES
             include/tenebris/scene/Math.hpp
             include/tenebris/scene/RenderScene.hpp
+            include/tenebris/scene/GpuUploadPlan.hpp
 )
 
 target_include_directories(
