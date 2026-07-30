@@ -13,7 +13,13 @@ target_link_libraries(tenebris_renderer_tests PRIVATE Tenebris::Renderer)
 target_compile_features(tenebris_renderer_tests PRIVATE cxx_std_20)
 tenebris_set_project_warnings(tenebris_renderer_tests)
 
+add_executable(tenebris_voxel_tests VoxelTests.cpp)
+target_link_libraries(tenebris_voxel_tests PRIVATE Tenebris::Voxel)
+target_compile_features(tenebris_voxel_tests PRIVATE cxx_std_20)
+tenebris_set_project_warnings(tenebris_voxel_tests)
+
 add_test(NAME tenebris.core.lifecycle COMMAND tenebris_core_tests)
 add_test(NAME tenebris.platform.headless COMMAND tenebris_platform_tests)
 add_test(NAME tenebris.renderer.headless-stress COMMAND tenebris_renderer_tests)
+add_test(NAME tenebris.voxel.greedy-meshing COMMAND tenebris_voxel_tests)
 add_test(NAME tenebris.game.smoke COMMAND tenebris --headless-smoke-test)
