@@ -75,8 +75,14 @@ int main(int argc, char** argv) {
 
     bool runtimeFailure = false;
     while (application.state() != tenebris::core::ApplicationState::Stopped) {
-        if (application.state() == tenebris::core::ApplicationState::Running && !platform.pumpEvents()) {
-            application.requestShutdown();
+        if (application.state() == tenebris::core::ApplicationState::Running) {
+            const bool keepRunning = platform.pumpEvents();
+            if (platform.consumeFramebufferResize()) {
+                renderer.notifyFramebufferResized();
+            }
+            if (!keepRunning) {
+                application.requestShutdown();
+            }
         }
 
         if (application.state() == tenebris::core::ApplicationState::Running && !renderer.drawFrame()) {
