@@ -2,7 +2,10 @@ name: Engine CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - 'engine/**'
+      - 'foundation/**'
   pull_request:
     branches: [main]
 
