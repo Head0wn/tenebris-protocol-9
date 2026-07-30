@@ -25,7 +25,7 @@ public:
     PlatformSystem(PlatformSystem&&) = delete;
     PlatformSystem& operator=(PlatformSystem&&) = delete;
 
-    [[nodiscard]] bool initialize(bool headless) noexcept;
+    [[nodiscard]] bool initialize(bool headless);
     [[nodiscard]] bool pumpEvents() noexcept;
     void delay(std::uint32_t milliseconds) const noexcept;
     void shutdown() noexcept;
