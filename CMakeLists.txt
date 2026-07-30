@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.28)
 
 project(
     TenebrisProtocol9
-    VERSION 0.1.0
+    VERSION 0.2.0
     DESCRIPTION "TENEBRIS — Le Protocole 9"
-    LANGUAGES CXX
+    LANGUAGES C CXX
 )
 
 set(CMAKE_CXX_STANDARD 20)
@@ -17,8 +17,10 @@ option(TENEBRIS_BUILD_TESTS "Build TENEBRIS automated tests" ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(CompilerWarnings)
+include(Dependencies)
 
 add_subdirectory(engine/core)
+add_subdirectory(engine/platform)
 add_subdirectory(game)
 
 if(TENEBRIS_BUILD_TESTS)
