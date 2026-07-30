@@ -1,6 +1,7 @@
 #include <tenebris/core/Application.hpp>
 #include <tenebris/platform/PlatformSystem.hpp>
 #include <tenebris/renderer/RendererSystem.hpp>
+#include <tenebris/scene/GpuUploadPlan.hpp>
 #include <tenebris/scene/RenderScene.hpp>
 
 #include <algorithm>
@@ -38,10 +39,22 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    const tenebris::scene::GpuUploadPlan uploadPlan =
+        tenebris::scene::makeGpuUploadPlan(site47Blockout.renderMesh);
+    const tenebris::scene::VoxelPushConstants voxelConstants =
+        tenebris::scene::makeVoxelPushConstants(site47Blockout.camera);
+    if (!uploadPlan.valid() || !uploadPlan.drawable()
+        || !tenebris::scene::isFinite(voxelConstants.viewProjection)) {
+        std::cerr << "TENEBRIS rejected the Site 47 GPU upload contract: "
+                  << uploadPlan.errorMessage() << '\n';
+        return 2;
+    }
+
     if (printSceneStats || headlessSmokeTest) {
         std::cout << "Site 47 render scene: " << site47Blockout.chunk.solidCount() << " solid voxels, "
                   << site47Blockout.renderMesh.vertices.size() << " vertices, "
-                  << site47Blockout.renderMesh.triangleCount() << " triangles, hash "
+                  << site47Blockout.renderMesh.triangleCount() << " triangles, "
+                  << uploadPlan.stagingSize << " staging bytes, hash "
                   << tenebris::scene::stableRenderMeshHash(site47Blockout.renderMesh) << ".\n";
     }
 
@@ -56,7 +69,7 @@ int main(int argc, char** argv) {
 
     if (!platform.initialize(headlessSmokeTest)) {
         std::cerr << platform.lastError() << '\n';
-        return 2;
+        return 3;
     }
 
 #ifndef NDEBUG
@@ -74,7 +87,7 @@ int main(int argc, char** argv) {
     if (!renderer.initialize(platform.window(), headlessSmokeTest)) {
         std::cerr << renderer.lastError() << '\n';
         platform.shutdown();
-        return 3;
+        return 4;
     }
 
     tenebris::core::Application application({
@@ -86,7 +99,7 @@ int main(int argc, char** argv) {
         std::cerr << "TENEBRIS failed to initialize.\n";
         renderer.shutdown();
         platform.shutdown();
-        return 4;
+        return 5;
     }
 
     bool runtimeFailure = false;
@@ -138,5 +151,5 @@ int main(int argc, char** argv) {
                   << " swapchain rebuilds.\n";
     }
 
-    return runtimeFailure ? 5 : 0;
+    return runtimeFailure ? 6 : 0;
 }
