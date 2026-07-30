@@ -19,6 +19,11 @@ target_include_directories(
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_link_libraries(tenebris_platform PRIVATE SDL3::SDL3-static)
+target_link_libraries(
+    tenebris_platform
+    PRIVATE
+        SDL3::SDL3-static
+        Vulkan::Headers
+)
 target_compile_features(tenebris_platform PUBLIC cxx_std_20)
 tenebris_set_project_warnings(tenebris_platform)

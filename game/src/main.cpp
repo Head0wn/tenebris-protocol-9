@@ -1,7 +1,9 @@
 #include <tenebris/core/Application.hpp>
 #include <tenebris/platform/PlatformSystem.hpp>
+#include <tenebris/renderer/RendererSystem.hpp>
 
 #include <algorithm>
+#include <cstdint>
 #include <iostream>
 #include <string_view>
 
@@ -18,59 +20,107 @@ namespace {
 } // namespace
 
 int main(int argc, char** argv) {
-    const bool smokeTest = hasArgument(argc, argv, "--headless-smoke-test");
+    const bool headlessSmokeTest = hasArgument(argc, argv, "--headless-smoke-test");
+    const bool gpuSmokeTest = hasArgument(argc, argv, "--gpu-smoke-test");
+    constexpr std::uint64_t gpuSmokeFrameBudget = 300U;
 
     if (hasArgument(argc, argv, "--version")) {
-        std::cout << "TENEBRIS 0.2.0\n";
+        std::cout << "TENEBRIS 0.3.0\n";
         return 0;
     }
 
     tenebris::platform::PlatformSystem platform({
-        .title = "TENEBRIS — Le Protocole 9",
+        .title = gpuSmokeTest ? "TENEBRIS — Vulkan Validation" : "TENEBRIS — Le Protocole 9",
         .width = 1600,
         .height = 900,
         .resizable = true,
         .highPixelDensity = true,
+        .vulkan = true,
     });
 
-    if (!platform.initialize(smokeTest)) {
+    if (!platform.initialize(headlessSmokeTest)) {
         std::cerr << platform.lastError() << '\n';
         return 1;
     }
 
+#ifndef NDEBUG
+    constexpr bool requestValidation = true;
+#else
+    constexpr bool requestValidation = false;
+#endif
+
+    tenebris::renderer::RendererSystem renderer({
+        .applicationName = "TENEBRIS — Le Protocole 9",
+        .framesInFlight = 2U,
+        .requestValidation = requestValidation,
+    });
+
+    if (!renderer.initialize(platform.window(), headlessSmokeTest)) {
+        std::cerr << renderer.lastError() << '\n';
+        platform.shutdown();
+        return 2;
+    }
+
     tenebris::core::Application application({
         .name = "TENEBRIS — Le Protocole 9",
-        .headless = smokeTest,
+        .headless = headlessSmokeTest,
     });
 
     if (!application.initialize()) {
         std::cerr << "TENEBRIS failed to initialize.\n";
-        return 2;
+        renderer.shutdown();
+        platform.shutdown();
+        return 3;
     }
 
+    bool runtimeFailure = false;
     while (application.state() != tenebris::core::ApplicationState::Stopped) {
-        if (application.state() == tenebris::core::ApplicationState::Running && !platform.pumpEvents()) {
+        if (application.state() == tenebris::core::ApplicationState::Running) {
+            const bool keepRunning = platform.pumpEvents();
+            if (platform.consumeFramebufferResize()) {
+                renderer.notifyFramebufferResized();
+            }
+            if (!keepRunning) {
+                application.requestShutdown();
+            }
+        }
+
+        if (application.state() == tenebris::core::ApplicationState::Running && !renderer.drawFrame()) {
+            std::cerr << renderer.lastError() << '\n';
+            runtimeFailure = true;
             application.requestShutdown();
         }
 
         const bool frameExecuted = application.tick();
-        if (smokeTest && frameExecuted && application.frameIndex() >= 3U) {
+        if (headlessSmokeTest && frameExecuted && application.frameIndex() >= 3U) {
+            application.requestShutdown();
+        }
+        if (gpuSmokeTest && frameExecuted && application.frameIndex() >= gpuSmokeFrameBudget) {
             application.requestShutdown();
         }
 
         if (!frameExecuted && application.state() != tenebris::core::ApplicationState::Stopped) {
             std::cerr << "TENEBRIS runtime stopped unexpectedly.\n";
-            return 3;
+            runtimeFailure = true;
+            application.requestShutdown();
         }
 
         platform.delay(1U);
     }
 
+    const tenebris::renderer::RendererStats rendererStats = renderer.stats();
+    renderer.shutdown();
     platform.shutdown();
 
-    if (smokeTest) {
-        std::cout << "TENEBRIS smoke test passed after " << application.frameIndex() << " frames.\n";
+    if (headlessSmokeTest) {
+        std::cout << "TENEBRIS headless smoke test passed after " << application.frameIndex()
+                  << " frames.\n";
+    }
+    if (gpuSmokeTest && !runtimeFailure) {
+        std::cout << "TENEBRIS Vulkan smoke test passed: " << rendererStats.submittedFrames
+                  << " frames submitted, " << rendererStats.swapchainRebuilds
+                  << " swapchain rebuilds.\n";
     }
 
-    return 0;
+    return runtimeFailure ? 4 : 0;
 }
