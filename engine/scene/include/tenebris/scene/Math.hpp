@@ -105,17 +105,17 @@ struct Mat4f final {
 
     Mat4f result = Mat4f::identity();
     result.at(0U, 0U) = right.x;
-    result.at(1U, 0U) = right.y;
-    result.at(2U, 0U) = right.z;
-    result.at(0U, 1U) = correctedUp.x;
+    result.at(0U, 1U) = right.y;
+    result.at(0U, 2U) = right.z;
+    result.at(0U, 3U) = -dot(right, eye);
+    result.at(1U, 0U) = correctedUp.x;
     result.at(1U, 1U) = correctedUp.y;
-    result.at(2U, 1U) = correctedUp.z;
-    result.at(0U, 2U) = -forward.x;
-    result.at(1U, 2U) = -forward.y;
+    result.at(1U, 2U) = correctedUp.z;
+    result.at(1U, 3U) = -dot(correctedUp, eye);
+    result.at(2U, 0U) = -forward.x;
+    result.at(2U, 1U) = -forward.y;
     result.at(2U, 2U) = -forward.z;
-    result.at(3U, 0U) = -dot(right, eye);
-    result.at(3U, 1U) = -dot(correctedUp, eye);
-    result.at(3U, 2U) = dot(forward, eye);
+    result.at(2U, 3U) = dot(forward, eye);
     return result;
 }
 
@@ -132,8 +132,8 @@ struct Mat4f final {
     result.at(0U, 0U) = focalLength / aspectRatio;
     result.at(1U, 1U) = -focalLength;
     result.at(2U, 2U) = farPlane / (nearPlane - farPlane);
-    result.at(2U, 3U) = -1.0F;
-    result.at(3U, 2U) = (nearPlane * farPlane) / (nearPlane - farPlane);
+    result.at(2U, 3U) = (nearPlane * farPlane) / (nearPlane - farPlane);
+    result.at(3U, 2U) = -1.0F;
     return result;
 }
 
