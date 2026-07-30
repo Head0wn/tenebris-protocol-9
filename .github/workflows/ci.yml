@@ -55,3 +55,22 @@ jobs:
 
       - name: Test
         run: ctest --test-dir build -C ${{ matrix.configuration }} --output-on-failure
+
+      - name: Stage Windows Vulkan validation build
+        if: runner.os == 'Windows' && matrix.configuration == 'Release'
+        shell: pwsh
+        run: |
+          $stage = "artifacts/TENEBRIS-Vulkan-Validation"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item "build/game/Release/TENEBRIS.exe" "$stage/TENEBRIS.exe"
+          Copy-Item "scripts/validate-vulkan.ps1" "$stage/validate-vulkan.ps1"
+          Copy-Item "docs/GPU_VALIDATION.md" "$stage/LISEZ-MOI.md"
+
+      - name: Upload Windows Vulkan validation build
+        if: runner.os == 'Windows' && matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v5
+        with:
+          name: TENEBRIS-Vulkan-Validation-Windows
+          path: artifacts/TENEBRIS-Vulkan-Validation
+          if-no-files-found: error
+          retention-days: 14
