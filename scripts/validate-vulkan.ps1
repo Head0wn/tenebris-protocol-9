@@ -36,12 +36,14 @@ Write-Host ""
 for ($cycle = 1; $cycle -le $Cycles; $cycle++) {
     Write-Host ("[{0}/{1}] Démarrage du smoke test GPU..." -f $cycle, $Cycles)
 
-    $process = Start-Process \
-        -FilePath $Executable \
-        -ArgumentList "--gpu-smoke-test" \
-        -NoNewWindow \
-        -Wait \
-        -PassThru
+    $processArguments = @{
+        FilePath = $Executable
+        ArgumentList = "--gpu-smoke-test"
+        NoNewWindow = $true
+        Wait = $true
+        PassThru = $true
+    }
+    $process = Start-Process @processArguments
 
     if ($process.ExitCode -ne 0) {
         throw "Le cycle $cycle a échoué avec le code $($process.ExitCode)."
