@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 project(
     TenebrisProtocol9
-    VERSION 0.2.0
+    VERSION 0.3.0
     DESCRIPTION "TENEBRIS — Le Protocole 9"
     LANGUAGES C CXX
 )
@@ -21,6 +21,7 @@ include(Dependencies)
 
 add_subdirectory(engine/core)
 add_subdirectory(engine/platform)
+add_subdirectory(engine/renderer)
 add_subdirectory(game)
 
 if(TENEBRIS_BUILD_TESTS)
