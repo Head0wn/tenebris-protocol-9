@@ -15,6 +15,10 @@ inline constexpr std::uint32_t voxelNormalLocation = 1U;
 inline constexpr std::uint32_t voxelMaterialLocation = 2U;
 inline constexpr std::uint32_t maximumSite47Material = 5U;
 
+static_assert(offsetof(GpuVoxelVertex, x) == 0U);
+static_assert(offsetof(GpuVoxelVertex, normalX) == 12U);
+static_assert(offsetof(GpuVoxelVertex, material) == 16U);
+
 struct BufferRegion final {
     std::uint64_t offset{0U};
     std::uint64_t size{0U};
