@@ -1,0 +1,106 @@
+name: Visual Validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "engine/platform/**"
+      - "engine/renderer/**"
+      - "engine/scene/**"
+      - "game/**"
+      - "assets/shaders/**"
+      - "scripts/run-visual-validation.bat"
+      - "docs/VISUAL_VALIDATION.md"
+      - ".github/workflows/visual-validation.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tenebris-visual-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-vulkan-smoke:
+    name: Vulkan software-GPU smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Vulkan and SDL dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+            pkg-config \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev \
+            libxfixes-dev libxi-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libwayland-dev wayland-protocols \
+            libdecor-0-dev libudev-dev \
+            libvulkan1 mesa-vulkan-drivers vulkan-tools vulkan-validationlayers \
+            xvfb xauth
+
+      - name: Configure Debug renderer
+        run: >-
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Debug
+          -DTENEBRIS_BUILD_TESTS=ON
+          -DTENEBRIS_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: cmake --build build --parallel 2
+
+      - name: Run automated tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Run 300-frame Vulkan validation
+        env:
+          VK_ICD_FILENAMES: /usr/share/vulkan/icd.d/lvp_icd.x86_64.json
+        run: |
+          vulkaninfo --summary
+          timeout 90s xvfb-run -a -s "-screen 0 1600x900x24" \
+            ./build/game/TENEBRIS --gpu-smoke-test
+
+  windows-package:
+    name: Windows portable validation build
+    runs-on: windows-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Configure Release build
+        run: >-
+          cmake -S . -B build
+          -DTENEBRIS_BUILD_TESTS=ON
+          -DTENEBRIS_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 2
+
+      - name: Run automated tests
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Assemble portable package
+        shell: pwsh
+        run: |
+          $stage = "dist/TENEBRIS-0.7.0-Site47"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item "build/game/Release/TENEBRIS.exe" $stage
+          Copy-Item "build/game/Release/assets" $stage -Recurse
+          Copy-Item "scripts/run-visual-validation.bat" "$stage/START-TENEBRIS.bat"
+          Copy-Item "docs/VISUAL_VALIDATION.md" "$stage/LISEZ-MOI.md"
+          Compress-Archive -Path "$stage/*" -DestinationPath "dist/TENEBRIS-0.7.0-Site47-Windows.zip" -CompressionLevel Optimal
+          Get-FileHash "dist/TENEBRIS-0.7.0-Site47-Windows.zip" -Algorithm SHA256
+
+      - name: Upload Windows validation build
+        uses: actions/upload-artifact@v4
+        with:
+          name: TENEBRIS-0.7.0-Site47-Windows
+          path: dist/TENEBRIS-0.7.0-Site47-Windows.zip
+          if-no-files-found: error
+          retention-days: 1
