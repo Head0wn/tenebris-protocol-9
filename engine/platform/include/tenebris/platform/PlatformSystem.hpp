@@ -16,6 +16,19 @@ struct PlatformConfig final {
     bool vulkan{true};
 };
 
+struct PlatformInputState final {
+    float moveForward{0.0F};
+    float moveRight{0.0F};
+    float moveUp{0.0F};
+    float mouseDeltaX{0.0F};
+    float mouseDeltaY{0.0F};
+    float wheelDelta{0.0F};
+    bool speedBoost{false};
+    bool resetCameraPressed{false};
+    bool toggleAutoOrbitPressed{false};
+    bool mouseCaptured{false};
+};
+
 class PlatformSystem final {
 public:
     explicit PlatformSystem(PlatformConfig config);
@@ -36,17 +49,23 @@ public:
     [[nodiscard]] bool isHeadless() const noexcept;
     [[nodiscard]] bool isVulkanLoaded() const noexcept;
     [[nodiscard]] SDL_Window* window() const noexcept;
+    [[nodiscard]] const PlatformInputState& input() const noexcept;
     [[nodiscard]] const std::string& lastError() const noexcept;
 
 private:
+    void clearTransientInput() noexcept;
+    void releaseMouseCapture() noexcept;
+
     PlatformConfig config_;
     SDL_Window* window_{nullptr};
+    PlatformInputState input_{};
     std::string lastError_;
     bool initialized_{false};
     bool headless_{false};
     bool sdlInitialized_{false};
     bool vulkanLoaded_{false};
     bool framebufferResized_{false};
+    bool mouseCaptured_{false};
 };
 
 } // namespace tenebris::platform
