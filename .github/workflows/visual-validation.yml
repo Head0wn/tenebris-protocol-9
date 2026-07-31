@@ -106,14 +106,14 @@ jobs:
       - name: Assemble portable package
         shell: pwsh
         run: |
-          $stage = "dist/TENEBRIS-0.8.0-Site47"
+          $stage = "dist/TENEBRIS-0.9.0-Site47"
           New-Item -ItemType Directory -Force -Path $stage | Out-Null
           Copy-Item "build/game/Release/TENEBRIS.exe" $stage
           Copy-Item "build/game/Release/assets" $stage -Recurse
           Copy-Item "scripts/run-visual-validation.bat" "$stage/START-TENEBRIS.bat"
           Copy-Item "docs/VISUAL_VALIDATION.md" "$stage/LISEZ-MOI.md"
-          Compress-Archive -Path "$stage/*" -DestinationPath "dist/TENEBRIS-0.8.0-Site47-Windows.zip" -CompressionLevel Optimal
-          Get-FileHash "dist/TENEBRIS-0.8.0-Site47-Windows.zip" -Algorithm SHA256
+          Compress-Archive -Path "$stage/*" -DestinationPath "dist/TENEBRIS-0.9.0-Site47-Windows.zip" -CompressionLevel Optimal
+          Get-FileHash "dist/TENEBRIS-0.9.0-Site47-Windows.zip" -Algorithm SHA256
 
       - name: Publish Windows validation prerelease
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -122,8 +122,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $ErrorActionPreference = "Stop"
-          $tag = "v0.8.0-site47-composition"
-          $asset = "dist/TENEBRIS-0.8.0-Site47-Windows.zip"
+          $tag = "v0.9.0-site47-staging"
+          $asset = "dist/TENEBRIS-0.9.0-Site47-Windows.zip"
           $repository = $env:GITHUB_REPOSITORY
 
           gh release view $tag --repo $repository *> $null
@@ -131,8 +131,8 @@ jobs:
             gh release create $tag `
               --repo $repository `
               --target $env:GITHUB_SHA `
-              --title "TENEBRIS 0.8.0 — Site 47 Composition Pass" `
-              --notes "Build Windows de validation de la nouvelle composition Site 47 : façade fracturée, entrée tactique, intérieur ouvert en coupe, Chambre 9, structures métalliques, éclairages d'urgence et contamination. Cette préversion valide la lecture architecturale avant le passage aux matériaux et à l'atmosphère avancés." `
+              --title "TENEBRIS 0.9.0 — Site 47 Staging Pass" `
+              --notes "Build Windows de validation de la mise en scène Site 47 : terrain irrégulier, approche fracturée, façade endommagée, sas tactique, ateliers techniques, tour de ventilation, Chambre 9 enrichie, contamination à plusieurs niveaux et contraste matériau renforcé. Cette préversion reste une validation de staging avant les systèmes atmosphériques et le gameplay." `
               --prerelease
           }
 
