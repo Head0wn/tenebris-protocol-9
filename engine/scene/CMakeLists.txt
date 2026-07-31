@@ -7,6 +7,7 @@ target_sources(
     PRIVATE
         src/RenderScene.cpp
         src/GpuUploadPlan.cpp
+        src/InspectionCamera.cpp
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS include
@@ -14,6 +15,7 @@ target_sources(
             include/tenebris/scene/Math.hpp
             include/tenebris/scene/RenderScene.hpp
             include/tenebris/scene/GpuUploadPlan.hpp
+            include/tenebris/scene/InspectionCamera.hpp
 )
 
 target_include_directories(
