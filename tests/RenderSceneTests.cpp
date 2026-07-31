@@ -105,7 +105,7 @@ void testRenderPacket(TestContext& context) {
     context.expect(invalidIndices.empty(), "non-triangular index buffers must be rejected");
 }
 
-void testSite47Blockout(TestContext& context) {
+void testSite47Staging(TestContext& context) {
     using namespace tenebris;
     using namespace tenebris::scene;
 
@@ -113,11 +113,11 @@ void testSite47Blockout(TestContext& context) {
     const SceneAsset second = buildSite47Blockout();
 
     context.expect(
-        first.chunk.solidCount() > 2'000U,
-        "Site 47 composition must contain enough authored mass to read as a facility"
+        first.chunk.solidCount() > 3'000U,
+        "Site 47 staging must contain enough authored mass and props to read as a facility"
     );
-    context.expect(!first.voxelMesh.empty(), "Site 47 blockout must produce voxel geometry");
-    context.expect(!first.renderMesh.empty(), "Site 47 blockout must produce GPU-ready geometry");
+    context.expect(!first.voxelMesh.empty(), "Site 47 staging must produce voxel geometry");
+    context.expect(!first.renderMesh.empty(), "Site 47 staging must produce GPU-ready geometry");
     context.expect(first.renderMesh.hasValidIndices(), "Site 47 render packet must have valid indices");
     context.expect(first.renderMesh.bounds.valid, "Site 47 render packet must have valid bounds");
     context.expect(
@@ -126,7 +126,7 @@ void testSite47Blockout(TestContext& context) {
     );
     context.expect(
         stableRenderMeshHash(first.renderMesh) == stableRenderMeshHash(second.renderMesh),
-        "Site 47 render data must be deterministic"
+        "Site 47 render data must remain deterministic"
     );
     context.expect(
         first.renderMesh.vertices == second.renderMesh.vertices
@@ -135,31 +135,54 @@ void testSite47Blockout(TestContext& context) {
     );
     context.expect(isFinite(first.camera.viewProjectionMatrix()), "Site 47 camera must be renderable");
 
+    context.expect(!first.chunk.isSolid({16, 6, 28}), "the tactical gate must remain open at human height");
     context.expect(
-        !first.chunk.isSolid({16, 5, 28}),
-        "the tactical entrance must remain open at human height"
+        first.chunk.sample({12, 6, 28}) == 3U,
+        "the tactical gate must be held by a deep steel blast frame"
     );
     context.expect(
-        first.chunk.sample({13, 5, 28}) == 3U,
-        "the tactical entrance must be framed by steel"
+        first.chunk.sample({15, 9, 29}) == 4U,
+        "the gate must expose a localized emergency light"
     );
     context.expect(
-        first.chunk.sample({15, 8, 28}) == 4U,
-        "the entrance must expose a visible emergency light bar"
-    );
-    context.expect(
-        first.chunk.sample({16, 5, 12}) == 5U,
-        "the Protocol 9 mass must occupy the containment cage"
-    );
-    context.expect(
-        !first.chunk.isSolid({22, 8, 20}),
-        "the right wing must stay open as an intentional cinematic cutaway"
+        first.chunk.sample({16, 3, 28}) == 3U,
+        "the entrance must include a raised steel threshold"
     );
 
+    context.expect(
+        first.chunk.sample({16, 6, 12}) == 5U,
+        "the Protocol 9 core must occupy the containment cage"
+    );
+    context.expect(
+        first.chunk.sample({21, 6, 19}) == 5U,
+        "the contamination must climb the corridor wall"
+    );
+    context.expect(
+        first.chunk.sample({16, 4, 27}) == 5U,
+        "the contamination must reach the entrance threshold"
+    );
+
+    context.expect(
+        !first.chunk.isSolid({24, 8, 20}),
+        "the right wing must remain open as a cinematic cutaway"
+    );
+    context.expect(
+        first.chunk.sample({24, 12, 9}) == 3U,
+        "the vent tower must anchor the exterior skyline"
+    );
+    context.expect(
+        first.chunk.sample({6, 7, 10}) == 4U,
+        "the service wing must expose an emergency-lit power cabinet"
+    );
+
+    context.expect(!first.chunk.isSolid({0, 0, 0}), "the terrain must not form a rectangular display plinth");
+    context.expect(first.chunk.sample({3, 0, 20}) == 1U, "the irregular Nevada terrain must surround the facility");
+    context.expect(first.chunk.sample({27, 13, 12}) == 3U, "the skyline must include a tall industrial volume");
+
     const CameraConfig& camera = first.camera.config();
-    context.expect(camera.position.y < 7.0F, "default Site 47 camera must use a grounded tactical height");
-    context.expect(camera.position.z > 10.0F, "default Site 47 camera must begin outside the entrance");
-    context.expect(camera.verticalFieldOfViewRadians < 1.0F, "default Site 47 camera must avoid a wide prototype FOV");
+    context.expect(camera.position.y < 5.0F, "default Site 47 camera must stay near tactical eye level");
+    context.expect(camera.position.z > 14.0F, "default Site 47 camera must begin beyond the blast apron");
+    context.expect(camera.verticalFieldOfViewRadians < 0.9F, "default Site 47 camera must use a restrained horror FOV");
 
     std::array<bool, 6U> materials{};
     for (const GpuVoxelVertex& vertex : first.renderMesh.vertices) {
@@ -168,7 +191,7 @@ void testSite47Blockout(TestContext& context) {
         }
     }
     for (std::size_t material = 1U; material < materials.size(); ++material) {
-        context.expect(materials[material], "Site 47 blockout must expose every authored material");
+        context.expect(materials[material], "Site 47 staging must expose every authored material");
     }
 }
 
@@ -178,10 +201,10 @@ int main() {
     TestContext context;
     testCamera(context);
     testRenderPacket(context);
-    testSite47Blockout(context);
+    testSite47Staging(context);
 
     if (context.result() == 0) {
-        std::cout << "Render-scene and Site 47 blockout tests passed.\n";
+        std::cout << "Render-scene and Site 47 staging tests passed.\n";
     }
     return context.result();
 }
