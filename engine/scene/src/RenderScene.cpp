@@ -240,46 +240,136 @@ SceneAsset buildSite47Blockout() {
 
     SceneAsset asset{};
 
+    // Nevada terrain and a broken concrete approach establish scale before the laboratory.
     fillBox(asset.chunk, {0, 0, 0}, {32, 1, 32}, sand);
-    fillBox(asset.chunk, {6, 1, 7}, {26, 2, 27}, concrete);
+    fillBox(asset.chunk, {0, 1, 0}, {8, 2, 6}, sand);
+    fillBox(asset.chunk, {25, 1, 0}, {32, 2, 9}, sand);
+    fillBox(asset.chunk, {0, 1, 25}, {6, 2, 32}, sand);
+    fillBox(asset.chunk, {27, 1, 23}, {32, 3, 32}, sand);
+    fillBox(asset.chunk, {14, 1, 0}, {18, 2, 8}, concrete);
+    fillBox(asset.chunk, {11, 1, 5}, {21, 2, 10}, concrete);
+    fillBox(asset.chunk, {9, 2, 7}, {23, 3, 9}, concrete);
 
-    fillBox(asset.chunk, {6, 2, 7}, {26, 9, 8}, concrete);
-    fillBox(asset.chunk, {6, 2, 26}, {26, 9, 27}, concrete);
-    fillBox(asset.chunk, {6, 2, 8}, {7, 9, 26}, concrete);
-    fillBox(asset.chunk, {25, 2, 8}, {26, 9, 26}, concrete);
+    // Site 47 foundation is intentionally irregular instead of a single sealed box.
+    fillBox(asset.chunk, {4, 1, 7}, {28, 2, 29}, concrete);
+    fillBox(asset.chunk, {5, 2, 8}, {27, 3, 28}, concrete);
 
-    fillBox(asset.chunk, {7, 8, 8}, {25, 9, 26}, steel);
-    fillBox(asset.chunk, {15, 2, 8}, {17, 8, 21}, steel);
-    fillBox(asset.chunk, {9, 2, 17}, {23, 8, 18}, concrete);
+    // Front facade: two heavy wings framing a recessed tactical entrance.
+    fillBox(asset.chunk, {4, 3, 27}, {12, 9, 28}, concrete);
+    fillBox(asset.chunk, {20, 3, 27}, {28, 9, 28}, concrete);
+    fillBox(asset.chunk, {4, 3, 24}, {6, 8, 28}, concrete);
+    fillBox(asset.chunk, {26, 3, 24}, {28, 9, 28}, concrete);
 
-    fillBox(asset.chunk, {14, 2, 7}, {18, 6, 8}, voxel::airMaterial);
-    fillBox(asset.chunk, {15, 2, 17}, {17, 5, 18}, voxel::airMaterial);
-    fillBox(asset.chunk, {15, 2, 20}, {17, 5, 21}, voxel::airMaterial);
+    fillBox(asset.chunk, {12, 3, 27}, {14, 10, 29}, steel);
+    fillBox(asset.chunk, {18, 3, 27}, {20, 10, 29}, steel);
+    fillBox(asset.chunk, {12, 8, 27}, {20, 10, 29}, steel);
+    fillBox(asset.chunk, {10, 9, 25}, {22, 10, 31}, steel);
+    fillBox(asset.chunk, {14, 8, 28}, {18, 9, 29}, emergencyLight);
 
-    fillBox(asset.chunk, {10, 2, 11}, {14, 4, 15}, steel);
-    fillBox(asset.chunk, {19, 2, 20}, {23, 6, 24}, steel);
-    fillBox(asset.chunk, {20, 3, 21}, {22, 7, 23}, voxel::airMaterial);
+    // Facade damage and stepped buttresses prevent the silhouette from reading as a cube.
+    fillBox(asset.chunk, {7, 7, 27}, {9, 9, 28}, voxel::airMaterial);
+    setVoxel(asset.chunk, 9, 8, 27, voxel::airMaterial);
+    fillBox(asset.chunk, {23, 3, 27}, {25, 5, 28}, voxel::airMaterial);
+    fillBox(asset.chunk, {4, 3, 25}, {5, 10, 27}, steel);
+    fillBox(asset.chunk, {9, 3, 27}, {10, 9, 28}, steel);
+    fillBox(asset.chunk, {22, 3, 27}, {23, 9, 28}, steel);
+    fillBox(asset.chunk, {27, 3, 24}, {28, 11, 27}, steel);
 
-    setVoxel(asset.chunk, 8, 7, 9, emergencyLight);
-    setVoxel(asset.chunk, 23, 7, 9, emergencyLight);
-    setVoxel(asset.chunk, 8, 7, 24, emergencyLight);
-    setVoxel(asset.chunk, 23, 7, 24, emergencyLight);
+    // Entry corridor: readable from outside, with no full roof hiding the route.
+    fillBox(asset.chunk, {12, 2, 14}, {20, 3, 28}, steel);
+    fillBox(asset.chunk, {11, 3, 14}, {12, 8, 27}, concrete);
+    fillBox(asset.chunk, {20, 3, 17}, {21, 8, 27}, concrete);
+    fillBox(asset.chunk, {11, 4, 18}, {12, 7, 21}, voxel::airMaterial);
+    fillBox(asset.chunk, {20, 4, 21}, {21, 7, 24}, voxel::airMaterial);
 
-    for (std::int32_t step = 0; step < 10; ++step) {
-        setVoxel(asset.chunk, 16 + (step / 3), 2, 10 + step, organic);
-        if ((step % 2) == 0) {
-            setVoxel(asset.chunk, 17 + (step / 4), 2, 10 + step, organic);
+    for (std::int32_t z = 15; z < 28; z += 4) {
+        fillBox(asset.chunk, {11, 8, z}, {21, 9, z + 1}, steel);
+    }
+    fillBox(asset.chunk, {11, 7, 16}, {12, 8, 18}, emergencyLight);
+    fillBox(asset.chunk, {20, 7, 19}, {21, 8, 21}, emergencyLight);
+    fillBox(asset.chunk, {11, 7, 24}, {12, 8, 26}, emergencyLight);
+
+    // Left service wing, machinery and a lower roof create a second architectural mass.
+    fillBox(asset.chunk, {4, 3, 8}, {5, 8, 25}, concrete);
+    fillBox(asset.chunk, {5, 3, 8}, {12, 8, 9}, concrete);
+    fillBox(asset.chunk, {5, 3, 15}, {11, 4, 26}, concrete);
+    fillBox(asset.chunk, {4, 8, 15}, {11, 9, 27}, steel);
+    fillBox(asset.chunk, {6, 3, 18}, {9, 7, 22}, steel);
+    fillBox(asset.chunk, {7, 4, 19}, {8, 6, 21}, voxel::airMaterial);
+    fillBox(asset.chunk, {6, 3, 10}, {10, 6, 14}, steel);
+    fillBox(asset.chunk, {6, 6, 11}, {10, 7, 12}, emergencyLight);
+    fillBox(asset.chunk, {5, 7, 23}, {9, 8, 24}, emergencyLight);
+
+    // Right side is deliberately opened as a cinematic cutaway, with a vent tower as landmark.
+    fillBox(asset.chunk, {21, 3, 16}, {28, 5, 17}, concrete);
+    fillBox(asset.chunk, {27, 3, 8}, {28, 8, 24}, concrete);
+    fillBox(asset.chunk, {23, 3, 18}, {24, 10, 23}, steel);
+    fillBox(asset.chunk, {26, 3, 18}, {27, 10, 23}, steel);
+    fillBox(asset.chunk, {23, 9, 18}, {27, 10, 23}, steel);
+    fillBox(asset.chunk, {24, 3, 18}, {26, 4, 23}, concrete);
+    fillBox(asset.chunk, {24, 5, 18}, {26, 6, 19}, emergencyLight);
+    fillBox(asset.chunk, {24, 7, 18}, {26, 8, 19}, emergencyLight);
+
+    // Chamber 9 occupies the rear of the cutaway, framed as the visual focal point.
+    fillBox(asset.chunk, {8, 2, 7}, {24, 3, 16}, steel);
+    fillBox(asset.chunk, {8, 3, 7}, {24, 10, 8}, concrete);
+    fillBox(asset.chunk, {8, 3, 8}, {9, 9, 16}, concrete);
+    fillBox(asset.chunk, {23, 3, 8}, {24, 6, 16}, concrete);
+    fillBox(asset.chunk, {8, 9, 7}, {24, 10, 10}, steel);
+    fillBox(asset.chunk, {8, 9, 12}, {24, 10, 13}, steel);
+    fillBox(asset.chunk, {8, 9, 15}, {24, 10, 16}, steel);
+
+    fillBox(asset.chunk, {10, 5, 7}, {14, 8, 8}, voxel::airMaterial);
+    fillBox(asset.chunk, {18, 5, 7}, {22, 8, 8}, voxel::airMaterial);
+    fillBox(asset.chunk, {9, 7, 8}, {13, 8, 9}, emergencyLight);
+    fillBox(asset.chunk, {19, 7, 8}, {23, 8, 9}, emergencyLight);
+
+    // Containment dais and cage: a recognizable destination beyond the corridor.
+    fillBox(asset.chunk, {13, 3, 9}, {19, 4, 15}, steel);
+    fillBox(asset.chunk, {14, 4, 10}, {18, 5, 14}, concrete);
+    fillBox(asset.chunk, {13, 4, 9}, {14, 9, 10}, steel);
+    fillBox(asset.chunk, {18, 4, 9}, {19, 9, 10}, steel);
+    fillBox(asset.chunk, {13, 4, 14}, {14, 9, 15}, steel);
+    fillBox(asset.chunk, {18, 4, 14}, {19, 9, 15}, steel);
+    fillBox(asset.chunk, {13, 8, 9}, {19, 9, 10}, steel);
+    fillBox(asset.chunk, {13, 8, 14}, {19, 9, 15}, steel);
+    fillBox(asset.chunk, {13, 8, 10}, {14, 9, 14}, steel);
+    fillBox(asset.chunk, {18, 8, 10}, {19, 9, 14}, steel);
+    fillBox(asset.chunk, {14, 7, 9}, {18, 8, 10}, emergencyLight);
+
+    // The Protocol 9 mass rises inside the cage and escapes towards the entrance.
+    fillBox(asset.chunk, {15, 4, 11}, {17, 7, 13}, organic);
+    setVoxel(asset.chunk, 14, 4, 12, organic);
+    setVoxel(asset.chunk, 17, 5, 11, organic);
+    setVoxel(asset.chunk, 16, 7, 12, organic);
+    setVoxel(asset.chunk, 15, 6, 10, organic);
+
+    constexpr std::int32_t trailOffsets[16]{0, 0, 1, 0, -1, -1, 0, 1, 1, 0, -1, 0, 1, 0, 0, -1};
+    for (std::int32_t step = 0; step < 16; ++step) {
+        const std::int32_t x = 16 + trailOffsets[step];
+        const std::int32_t z = 12 + step;
+        setVoxel(asset.chunk, x, 3, z, organic);
+        if ((step % 3) == 0) {
+            setVoxel(asset.chunk, x + 1, 3, z, organic);
         }
     }
-    fillBox(asset.chunk, {20, 2, 21}, {22, 4, 23}, organic);
+    fillBox(asset.chunk, {20, 3, 18}, {21, 6, 20}, organic);
+    setVoxel(asset.chunk, 20, 6, 19, organic);
+    setVoxel(asset.chunk, 19, 3, 23, organic);
+    setVoxel(asset.chunk, 17, 3, 27, organic);
 
     asset.voxelMesh = voxel::GreedyMesher::build(asset.chunk);
-    asset.renderMesh = buildRenderMesh(asset.voxelMesh, 0.5F, {-8.0F, 0.0F, -8.0F}, asset.chunk.revision());
+    asset.renderMesh = buildRenderMesh(
+        asset.voxelMesh,
+        0.5F,
+        {-8.0F, 0.0F, -8.0F},
+        asset.chunk.revision()
+    );
     asset.camera = SceneCamera({
-        .position = {0.0F, 10.5F, 14.0F},
-        .target = {0.0F, 2.5F, 0.0F},
+        .position = {8.75F, 5.5F, 15.0F},
+        .target = {0.0F, 3.0F, 1.0F},
         .up = {0.0F, 1.0F, 0.0F},
-        .verticalFieldOfViewRadians = 1.0471975512F,
+        .verticalFieldOfViewRadians = 0.907571211F,
         .aspectRatio = 16.0F / 9.0F,
         .nearPlane = 0.05F,
         .farPlane = 200.0F,
