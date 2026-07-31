@@ -41,9 +41,9 @@ enum class UploadPlanError : std::uint8_t {
     InvalidIndices,
     VertexCountOverflow,
     IndexCountOverflow,
-    StagingSizeOverflow,
     VertexSizeOverflow,
     IndexSizeOverflow,
+    StagingSizeOverflow,
 };
 
 struct GpuUploadPlan final {
