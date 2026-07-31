@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     constexpr std::uint64_t gpuSmokeFrameBudget = 300U;
 
     if (hasArgument(argc, argv, "--version")) {
-        std::cout << "TENEBRIS 0.5.0\n";
+        std::cout << "TENEBRIS 0.6.0\n";
         return 0;
     }
 
@@ -80,6 +80,7 @@ int main(int argc, char** argv) {
 
     tenebris::renderer::RendererSystem renderer({
         .applicationName = "TENEBRIS — Le Protocole 9",
+        .shaderDirectory = "assets/shaders/compiled",
         .framesInFlight = 2U,
         .requestValidation = requestValidation,
     });
@@ -88,6 +89,13 @@ int main(int argc, char** argv) {
         std::cerr << renderer.lastError() << '\n';
         platform.shutdown();
         return 4;
+    }
+
+    if (!renderer.setVoxelScene(site47Blockout.renderMesh, site47Blockout.camera)) {
+        std::cerr << renderer.lastError() << '\n';
+        renderer.shutdown();
+        platform.shutdown();
+        return 5;
     }
 
     tenebris::core::Application application({
@@ -99,7 +107,7 @@ int main(int argc, char** argv) {
         std::cerr << "TENEBRIS failed to initialize.\n";
         renderer.shutdown();
         platform.shutdown();
-        return 5;
+        return 6;
     }
 
     bool runtimeFailure = false;
@@ -147,9 +155,11 @@ int main(int argc, char** argv) {
     }
     if (gpuSmokeTest && !runtimeFailure) {
         std::cout << "TENEBRIS Vulkan smoke test passed: " << rendererStats.submittedFrames
-                  << " frames submitted, " << rendererStats.swapchainRebuilds
-                  << " swapchain rebuilds.\n";
+                  << " frames, " << rendererStats.sceneUploads << " scene upload, "
+                  << rendererStats.drawCalls << " indexed draws, "
+                  << rendererStats.drawnTriangles << " triangles drawn, "
+                  << rendererStats.swapchainRebuilds << " swapchain rebuilds.\n";
     }
 
-    return runtimeFailure ? 6 : 0;
+    return runtimeFailure ? 7 : 0;
 }
