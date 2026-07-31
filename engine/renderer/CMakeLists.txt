@@ -31,8 +31,9 @@ target_compile_features(tenebris_renderer PUBLIC cxx_std_20)
 tenebris_set_project_warnings(tenebris_renderer)
 
 # Vulkan function-pointer loading and explicit ABI boundaries are intentional.
+# C4324 is expected because the GPU push-constant payload is deliberately alignas(16).
 if(MSVC)
-    target_compile_options(tenebris_renderer PRIVATE /wd4834)
+    target_compile_options(tenebris_renderer PRIVATE /wd4834 /wd4324)
 else()
     target_compile_options(tenebris_renderer PRIVATE -Wno-unused-result -Wno-sign-conversion)
 endif()
