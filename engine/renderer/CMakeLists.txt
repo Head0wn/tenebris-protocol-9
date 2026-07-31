@@ -5,7 +5,7 @@ add_library(Tenebris::Renderer ALIAS tenebris_renderer)
 target_sources(
     tenebris_renderer
     PRIVATE
-        src/RendererSystem.cpp
+        src/RendererSystemV2.cpp
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS include
@@ -25,14 +25,15 @@ target_link_libraries(
     PRIVATE
         SDL3::SDL3-static
         Vulkan::Headers
+        Tenebris::Scene
 )
 target_compile_features(tenebris_renderer PUBLIC cxx_std_20)
 tenebris_set_project_warnings(tenebris_renderer)
 
-# The Vulkan C ABI and the renderer's centralized failure path deliberately cross
-# two compiler-warning boundaries. All remaining warnings stay fatal for this target.
+# Vulkan function-pointer loading and explicit ABI boundaries are intentional.
+# C4324 is expected because the GPU push-constant payload is deliberately alignas(16).
 if(MSVC)
-    target_compile_options(tenebris_renderer PRIVATE /wd4834)
+    target_compile_options(tenebris_renderer PRIVATE /wd4834 /wd4324)
 else()
     target_compile_options(tenebris_renderer PRIVATE -Wno-unused-result -Wno-sign-conversion)
 endif()
