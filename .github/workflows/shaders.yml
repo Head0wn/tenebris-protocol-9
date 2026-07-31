@@ -2,7 +2,7 @@ name: Shader CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, engine/vulkan-site47-render]
     paths:
       - "assets/shaders/**"
       - ".github/workflows/shaders.yml"
@@ -13,7 +13,7 @@ on:
       - ".github/workflows/shaders.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: tenebris-shaders-${{ github.ref }}
@@ -36,11 +36,13 @@ jobs:
 
       - name: Compile shaders
         run: |
-          mkdir -p build/shaders
+          mkdir -p assets/shaders/compiled build/shaders
           glslangValidator -V --target-env vulkan1.2 \
-            -o build/shaders/voxel.vert.spv assets/shaders/voxel.vert
+            -o assets/shaders/compiled/voxel.vert.spv assets/shaders/voxel.vert
           glslangValidator -V --target-env vulkan1.2 \
-            -o build/shaders/voxel.frag.spv assets/shaders/voxel.frag
+            -o assets/shaders/compiled/voxel.frag.spv assets/shaders/voxel.frag
+          cp assets/shaders/compiled/voxel.vert.spv build/shaders/voxel.vert.spv
+          cp assets/shaders/compiled/voxel.frag.spv build/shaders/voxel.frag.spv
 
       - name: Validate SPIR-V
         run: |
@@ -57,10 +59,17 @@ jobs:
           grep -q "PushConstant" build/shaders/voxel.vert.spvasm
 
       - name: Report validated shader fingerprints
+        run: sha256sum build/shaders/voxel.vert.spv build/shaders/voxel.frag.spv
+
+      - name: Persist validated shader binaries
+        if: github.event_name == 'push' && github.ref_name == 'engine/vulkan-site47-render'
         run: |
-          sha256sum build/shaders/voxel.vert.spv build/shaders/voxel.frag.spv
-          printf 'TENEBRIS_VERTEX_SPV_BASE64='
-          base64 --wrap=0 build/shaders/voxel.vert.spv
-          printf '\nTENEBRIS_FRAGMENT_SPV_BASE64='
-          base64 --wrap=0 build/shaders/voxel.frag.spv
-          printf '\n'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/shaders/compiled/voxel.vert.spv assets/shaders/compiled/voxel.frag.spv
+          if git diff --cached --quiet; then
+            echo "Validated shader binaries are already current."
+            exit 0
+          fi
+          git commit -m "assets: persist validated voxel SPIR-V"
+          git push
