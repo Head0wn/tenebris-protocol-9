@@ -106,12 +106,16 @@ void testRenderPacket(TestContext& context) {
 }
 
 void testSite47Blockout(TestContext& context) {
+    using namespace tenebris;
     using namespace tenebris::scene;
 
     const SceneAsset first = buildSite47Blockout();
     const SceneAsset second = buildSite47Blockout();
 
-    context.expect(first.chunk.solidCount() > 0U, "Site 47 blockout must contain solid voxels");
+    context.expect(
+        first.chunk.solidCount() > 2'000U,
+        "Site 47 composition must contain enough authored mass to read as a facility"
+    );
     context.expect(!first.voxelMesh.empty(), "Site 47 blockout must produce voxel geometry");
     context.expect(!first.renderMesh.empty(), "Site 47 blockout must produce GPU-ready geometry");
     context.expect(first.renderMesh.hasValidIndices(), "Site 47 render packet must have valid indices");
@@ -130,6 +134,32 @@ void testSite47Blockout(TestContext& context) {
         "rebuilding Site 47 must reproduce identical geometry"
     );
     context.expect(isFinite(first.camera.viewProjectionMatrix()), "Site 47 camera must be renderable");
+
+    context.expect(
+        !first.chunk.isSolid({16, 5, 28}),
+        "the tactical entrance must remain open at human height"
+    );
+    context.expect(
+        first.chunk.sample({13, 5, 28}) == 3U,
+        "the tactical entrance must be framed by steel"
+    );
+    context.expect(
+        first.chunk.sample({15, 8, 28}) == 4U,
+        "the entrance must expose a visible emergency light bar"
+    );
+    context.expect(
+        first.chunk.sample({16, 5, 12}) == 5U,
+        "the Protocol 9 mass must occupy the containment cage"
+    );
+    context.expect(
+        !first.chunk.isSolid({22, 8, 20}),
+        "the right wing must stay open as an intentional cinematic cutaway"
+    );
+
+    const CameraConfig& camera = first.camera.config();
+    context.expect(camera.position.y < 7.0F, "default Site 47 camera must use a grounded tactical height");
+    context.expect(camera.position.z > 10.0F, "default Site 47 camera must begin outside the entrance");
+    context.expect(camera.verticalFieldOfViewRadians < 1.0F, "default Site 47 camera must avoid a wide prototype FOV");
 
     std::array<bool, 6U> materials{};
     for (const GpuVoxelVertex& vertex : first.renderMesh.vertices) {
