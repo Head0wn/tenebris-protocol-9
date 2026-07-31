@@ -2,7 +2,6 @@ name: Shader CI
 
 on:
   push:
-    branches: [main, engine/vulkan-site47-render]
     paths:
       - "assets/shaders/**"
       - ".github/workflows/shaders.yml"
@@ -62,7 +61,10 @@ jobs:
         run: sha256sum build/shaders/voxel.vert.spv build/shaders/voxel.frag.spv
 
       - name: Persist validated shader binaries
-        if: github.event_name == 'push' && github.ref_name == 'engine/vulkan-site47-render'
+        if: >-
+          github.event_name == 'push'
+          && github.ref_name != 'main'
+          && github.actor != 'github-actions[bot]'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

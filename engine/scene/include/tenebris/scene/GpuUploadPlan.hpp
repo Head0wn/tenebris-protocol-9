@@ -61,7 +61,7 @@ struct GpuUploadPlan final {
 
 struct alignas(16) VoxelPushConstants final {
     Mat4f viewProjection{};
-    std::array<float, 4U> lightDirectionAmbient{-0.45F, -1.0F, 0.55F, 0.12F};
+    std::array<float, 4U> lightDirectionAmbient{-0.55F, -1.0F, 0.30F, 0.07F};
 };
 
 static_assert(sizeof(VoxelPushConstants) == 80U);
@@ -80,8 +80,8 @@ using Site47MaterialPalette = std::array<VoxelMaterial, maximumSite47Material + 
 [[nodiscard]] GpuUploadPlan makeGpuUploadPlan(const RenderMesh& mesh) noexcept;
 [[nodiscard]] VoxelPushConstants makeVoxelPushConstants(
     const SceneCamera& camera,
-    Vec3f lightDirection = {-0.45F, -1.0F, 0.55F},
-    float ambientLight = 0.12F
+    Vec3f lightDirection = {-0.55F, -1.0F, 0.30F},
+    float ambientLight = 0.07F
 ) noexcept;
 [[nodiscard]] const Site47MaterialPalette& site47MaterialPalette() noexcept;
 

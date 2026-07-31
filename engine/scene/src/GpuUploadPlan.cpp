@@ -187,10 +187,10 @@ VoxelPushConstants makeVoxelPushConstants(
 ) noexcept {
     Vec3f normalizedLight = normalize(lightDirection);
     if (length(normalizedLight) <= 0.000001F) {
-        normalizedLight = normalize({0.25F, -1.0F, 0.35F});
+        normalizedLight = normalize({-0.55F, -1.0F, 0.30F});
     }
     if (!std::isfinite(ambientLight)) {
-        ambientLight = 0.22F;
+        ambientLight = 0.07F;
     }
 
     return {
@@ -211,24 +211,24 @@ const Site47MaterialPalette& site47MaterialPalette() noexcept {
             .emissiveAndResponse = {0.0F, 1.0F, 0.0F, 0.0F},
         },
         VoxelMaterial{
-            .baseColor = {0.34F, 0.22F, 0.12F, 1.0F},
-            .emissiveAndResponse = {0.0F, 0.96F, 0.0F, 0.0F},
+            .baseColor = {0.31F, 0.215F, 0.12F, 1.0F},
+            .emissiveAndResponse = {0.0F, 0.92F, 0.0F, 0.0F},
         },
         VoxelMaterial{
-            .baseColor = {0.19F, 0.20F, 0.22F, 1.0F},
-            .emissiveAndResponse = {0.0F, 0.88F, 0.0F, 0.0F},
+            .baseColor = {0.145F, 0.165F, 0.18F, 1.0F},
+            .emissiveAndResponse = {0.0F, 0.78F, 0.0F, 0.0F},
         },
         VoxelMaterial{
-            .baseColor = {0.24F, 0.28F, 0.31F, 1.0F},
-            .emissiveAndResponse = {0.0F, 0.48F, 0.78F, 0.0F},
+            .baseColor = {0.085F, 0.11F, 0.13F, 1.0F},
+            .emissiveAndResponse = {0.0F, 0.42F, 0.82F, 0.0F},
         },
         VoxelMaterial{
-            .baseColor = {0.62F, 0.025F, 0.012F, 1.0F},
-            .emissiveAndResponse = {1.75F, 0.35F, 0.08F, 0.0F},
+            .baseColor = {0.78F, 0.028F, 0.01F, 1.0F},
+            .emissiveAndResponse = {2.65F, 0.28F, 0.05F, 0.0F},
         },
         VoxelMaterial{
-            .baseColor = {0.035F, 0.008F, 0.012F, 1.0F},
-            .emissiveAndResponse = {0.42F, 0.72F, 0.02F, 0.0F},
+            .baseColor = {0.045F, 0.004F, 0.009F, 1.0F},
+            .emissiveAndResponse = {0.08F, 0.62F, 0.01F, 0.0F},
         },
     };
     return palette;
