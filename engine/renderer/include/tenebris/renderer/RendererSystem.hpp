@@ -6,10 +6,16 @@
 
 struct SDL_Window;
 
+namespace tenebris::scene {
+class SceneCamera;
+struct RenderMesh;
+} // namespace tenebris::scene
+
 namespace tenebris::renderer {
 
 struct RendererConfig final {
     std::string applicationName{"TENEBRIS — Le Protocole 9"};
+    std::string shaderDirectory{"assets/shaders/compiled"};
     std::uint32_t framesInFlight{2U};
     bool requestValidation{false};
 };
@@ -25,6 +31,10 @@ enum class RendererState : std::uint8_t {
 struct RendererStats final {
     std::uint64_t submittedFrames{0U};
     std::uint64_t swapchainRebuilds{0U};
+    std::uint64_t sceneUploads{0U};
+    std::uint64_t uploadedBytes{0U};
+    std::uint64_t drawCalls{0U};
+    std::uint64_t drawnTriangles{0U};
 };
 
 class RendererSystem final {
@@ -38,6 +48,10 @@ public:
     RendererSystem& operator=(RendererSystem&&) = delete;
 
     [[nodiscard]] bool initialize(SDL_Window* window, bool headless);
+    [[nodiscard]] bool setVoxelScene(
+        const scene::RenderMesh& mesh,
+        const scene::SceneCamera& camera
+    );
     [[nodiscard]] bool drawFrame();
     void notifyFramebufferResized() noexcept;
     void waitIdle() noexcept;
