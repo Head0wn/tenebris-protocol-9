@@ -57,9 +57,16 @@ jobs:
         run: ctest --test-dir build --output-on-failure
 
       - name: Run 300-frame Vulkan validation
-        env:
-          VK_ICD_FILENAMES: /usr/share/vulkan/icd.d/lvp_icd.x86_64.json
         run: |
+          LVP_ICD="$(dpkg -L mesa-vulkan-drivers | grep -E '/(lvp|lavapipe).*\.json$' | head -n 1)"
+          if [ -z "$LVP_ICD" ] || [ ! -f "$LVP_ICD" ]; then
+            echo "Lavapipe ICD not found. Installed Vulkan manifests:"
+            find /usr/share/vulkan /etc/vulkan -type f -name '*.json' -print 2>/dev/null || true
+            exit 1
+          fi
+          echo "Using Lavapipe ICD: $LVP_ICD"
+          export VK_DRIVER_FILES="$LVP_ICD"
+          export VK_ICD_FILENAMES="$LVP_ICD"
           vulkaninfo --summary
           timeout 90s xvfb-run -a -s "-screen 0 1600x900x24" \
             ./build/game/TENEBRIS --gpu-smoke-test
