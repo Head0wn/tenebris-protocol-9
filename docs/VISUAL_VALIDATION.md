@@ -1,17 +1,19 @@
-# TENEBRIS 0.8.0 — Validation de la composition Site 47
+# TENEBRIS 0.9.0 — Validation de la mise en scène Site 47
 
-Cette build n'est pas présentée comme une démo jouable. Elle remplace le premier cube technique par une composition architecturale volontaire, destinée à vérifier que Site 47 est immédiatement identifiable avant le travail avancé sur les matériaux, la brume, la pluie et l'éclairage cinématique.
+Cette build n'est pas présentée comme une démo jouable. Elle doit transformer le blockout architectural 0.8.0 en une scène de staging horror plus crédible, avec une hiérarchie visuelle, des volumes techniques, des dégâts et une contamination racontant clairement l'incident.
 
-## Ce qui doit être visible
+## Ce qui change depuis la 0.8.0
 
-- une implantation irrégulière dans le désert, et non un bâtiment cubique fermé ;
-- une façade endommagée avec une entrée tactique centrale clairement dimensionnée ;
-- un couloir intérieur lisible depuis l'extérieur ;
-- une aile droite ouverte en coupe pour révéler la profondeur de la scène ;
-- la Chambre 9 au fond, avec sa cage de confinement ;
-- une traînée organique reliant la cage à l'entrée ;
-- plusieurs masses architecturales : aile de service, auvents, poutres, contreforts et tour de ventilation ;
-- des barres d'éclairage d'urgence suffisamment grandes pour être lisibles.
+- le terrain ne forme plus un socle rectangulaire continu ;
+- l'approche bétonnée est fracturée et ponctuée de débris ;
+- la façade possède plusieurs hauteurs, des ruptures, des renforts exposés et un poste de contrôle effondré ;
+- le sas d'entrée est plus profond et comporte un seuil, un auvent et plusieurs couches de structure ;
+- le couloir contient des cadres, consoles, alcôves, chemins de câbles et éclairages localisés ;
+- l'aile de service contient des armoires, machines, toitures basses et conduites ;
+- l'aile droite reste ouverte en coupe et reçoit une véritable tour de ventilation ;
+- la Chambre 9 possède une passerelle technique, des postes d'observation, un anneau de maintenance et une cage plus imposante ;
+- la contamination possède un noyau dense, une propagation au sol, des remontées murales et des foyers secondaires ;
+- le béton, l'acier, l'éclairage d'urgence et la matière organique sont davantage séparés par le contraste.
 
 ## Contrôles
 
@@ -24,21 +26,30 @@ Cette build n'est pas présentée comme une démo jouable. Elle remplace le prem
 - `R` : restaurer le cadrage initial.
 - `Échap` : libérer la souris ; une seconde pression ferme la build.
 
+## Captures nécessaires
+
+1. Une vue trois-quarts avant depuis le cadrage initial.
+2. Une vue intérieure depuis le sas, orientée vers la Chambre 9.
+3. Une vue trois-quarts arrière ou latérale montrant la coupe, les toitures et la tour de ventilation.
+
 ## Validation attendue
 
 1. La fenêtre s'ouvre sans écran noir permanent ni message d'erreur.
-2. Le cadrage initial montre une vue trois-quarts, plus basse et plus proche de l'entrée.
-3. La silhouette du laboratoire est fragmentée et les hauteurs sont variées.
-4. L'entrée ne paraît plus minuscule par rapport à la façade.
-5. Le couloir, la Chambre 9 et la contamination restent visibles pendant l'orbite.
-6. Les surfaces proches masquent correctement les surfaces situées derrière elles.
-7. Les matériaux sable, béton, métal, éclairage d'urgence et contamination sont distincts.
-8. Le redimensionnement de la fenêtre ne déforme pas l'image et ne provoque pas de crash.
-9. L'orbite automatique reste fluide pendant au moins cinq minutes.
+2. La première image ne ressemble ni à une boîte, ni à une maquette posée sur un plateau uniforme.
+3. Le sas tactique est immédiatement identifiable et correctement dimensionné.
+4. L'approche, les dégâts et le poste de contrôle donnent une échelle humaine à l'extérieur.
+5. Le couloir présente plusieurs plans de profondeur et des éléments techniques reconnaissables.
+6. La Chambre 9 et sa cage constituent le point focal au fond de l'axe principal.
+7. La contamination possède une origine, une propagation et plusieurs ramifications lisibles.
+8. Les éclairages rouges restent ponctuels et ne forment plus de grandes bandes de couleur debug.
+9. Le terrain, les ailes, les toitures et la tour produisent une silhouette irrégulière pendant l'orbite.
+10. Les surfaces proches masquent correctement les surfaces situées derrière elles.
+11. Le redimensionnement de la fenêtre ne déforme pas l'image et ne provoque pas de crash.
+12. L'orbite automatique reste fluide pendant au moins cinq minutes.
 
 ## Limites assumées de cette passe
 
-Cette version vérifie la composition, l'échelle et la lecture des volumes. Elle ne contient pas encore les textures PBR, les lumières locales rouges et cyan, les ombres avancées, la brume volumétrique, la pluie, les particules, les accessoires détaillés ni le contrôleur joueur avec collisions.
+Cette version valide le staging, l'échelle et la séparation des matériaux. Elle ne contient pas encore les textures PBR, les lumières locales avec diffusion réelle, les ombres avancées, la brume volumétrique, la pluie, les particules, les accessoires narratifs finaux ni le contrôleur joueur avec collisions.
 
 ## Diagnostic
 
