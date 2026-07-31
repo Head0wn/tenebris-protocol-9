@@ -9,7 +9,7 @@ target_compile_features(tenebris_platform_tests PRIVATE cxx_std_20)
 tenebris_set_project_warnings(tenebris_platform_tests)
 
 add_executable(tenebris_renderer_tests RendererSystemTests.cpp)
-target_link_libraries(tenebris_renderer_tests PRIVATE Tenebris::Renderer)
+target_link_libraries(tenebris_renderer_tests PRIVATE Tenebris::Renderer Tenebris::Scene)
 target_compile_features(tenebris_renderer_tests PRIVATE cxx_std_20)
 tenebris_set_project_warnings(tenebris_renderer_tests)
 
