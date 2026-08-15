@@ -3,93 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#050706">
+<meta name="theme-color" content="#020302">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>TENEBRIS — Trajectoire W</title>
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
+<div id="rotate">TOURNE TON TÉLÉPHONE<small>TENEBRIS se joue en paysage</small></div>
 <div id="app">
-  <div id="rotate">TOURNE TON TÉLÉPHONE<small>TENEBRIS se joue en paysage</small></div>
-
-  <section id="title" class="screen visible">
-    <div class="titleShade"></div>
-    <div class="titlePanel">
-      <div class="brand">TENEBRIS</div>
-      <div class="protocol">LE PROTOCOLE 9</div>
-      <div class="episode">TRAJECTOIRE W</div>
-      <p>ÉPISODE MOBILE · ETHAN WALKER</p>
-      <button id="newBtn">NOUVELLE PARTIE</button>
-      <button id="continueBtn">CONTINUER</button>
-      <button id="helpBtn">COMMANDES</button>
-    </div>
-  </section>
-
-  <section id="help" class="screen">
-    <div class="panel">
-      <h1>COMMANDES</h1>
-      <p><b>TOUCHE LE SOL</b> — Walker rejoint l’endroit en suivant les zones praticables.</p>
-      <p><b>LES PETITS ÉCLATS BLANCS</b> — objet, porte ou élément à examiner.</p>
-      <p><b>TOUCHE UN ÉCLAT</b> — Walker s’approche et interagit automatiquement.</p>
-      <p><b>INV / DOCS</b> — inventaire et documents trouvés.</p>
-      <button id="backBtn">RETOUR</button>
-    </div>
-  </section>
-
-  <main id="game" class="hidden">
-    <div id="scene">
-      <img id="background" alt="Décor pré-rendu">
-      <div id="depthTint"></div>
-      <div id="sparkles"></div>
-      <div id="walker" aria-hidden="true">
-        <div class="walkerShadow"></div>
-        <svg viewBox="0 0 64 120" class="walkerSvg">
-          <defs>
-            <linearGradient id="jacket" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#293139"/><stop offset="1" stop-color="#11161b"/></linearGradient>
-            <linearGradient id="vest" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#20272c"/><stop offset="1" stop-color="#0b0e11"/></linearGradient>
-          </defs>
-          <g class="body">
-            <ellipse cx="32" cy="17" rx="10" ry="12" fill="#b39a83"/>
-            <path d="M22 16Q32 4 43 14L42 19Q32 13 22 20Z" fill="#1a1716"/>
-            <rect x="22" y="27" width="20" height="37" rx="6" fill="url(#jacket)"/>
-            <rect x="24" y="34" width="16" height="22" rx="3" fill="url(#vest)" stroke="#465159" stroke-width="1"/>
-            <rect x="27" y="38" width="10" height="5" rx="1" fill="#171b1f"/>
-            <text x="32" y="42" fill="#9aa2a8" font-size="3.5" font-family="monospace" text-anchor="middle">UFST</text>
-            <g class="arm armL"><rect x="14" y="31" width="9" height="34" rx="4" fill="#20282e"/><rect x="15" y="60" width="8" height="11" rx="3" fill="#1c2125"/></g>
-            <g class="arm armR"><rect x="41" y="31" width="9" height="34" rx="4" fill="#20282e"/><rect x="42" y="60" width="8" height="11" rx="3" fill="#1c2125"/></g>
-            <rect x="23" y="61" width="18" height="9" rx="2" fill="#11161a"/>
-            <g class="leg legL"><rect x="23" y="68" width="8" height="35" rx="3" fill="#171d21"/><rect x="20" y="99" width="12" height="8" rx="3" fill="#0b0d0f"/></g>
-            <g class="leg legR"><rect x="33" y="68" width="8" height="35" rx="3" fill="#171d21"/><rect x="32" y="99" width="12" height="8" rx="3" fill="#0b0d0f"/></g>
-            <rect x="42" y="45" width="5" height="23" rx="2" fill="#090b0c" transform="rotate(-9 44 56)"/>
-          </g>
-        </svg>
-      </div>
-      <div id="tapMark"></div>
-    </div>
-
-    <header id="hud">
-      <div class="hudBox statusBox">
-        <div class="location" id="location"></div>
-        <div class="healthLine"><span>WALKER</span><div class="health"><i id="healthFill"></i></div><b id="healthText">STABLE</b></div>
-      </div>
-      <div class="hudBox objectiveBox">
-        <span>OBJECTIF</span>
-        <strong id="objective"></strong>
-        <small id="hint">Les éléments importants scintillent.</small>
-      </div>
-    </header>
-
-    <div id="bottomButtons"><button id="invBtn">INV</button><button id="docsBtn">DOCS</button></div>
-  </main>
-
-  <div id="dialog" class="hidden"><b id="speaker"></b><span id="dialogText"></span><small>TOUCHER POUR CONTINUER</small></div>
-
-  <section id="inventory" class="overlay hidden"><div class="overlayCard"><h2>INVENTAIRE</h2><div id="items"></div><div id="itemDesc">Sélectionne un objet.</div><div class="actions"><button id="useBtn">UTILISER</button><button id="closeInvBtn">FERMER</button></div></div></section>
-  <section id="documents" class="overlay hidden"><div class="overlayCard"><h2>DOCUMENTS</h2><div id="docList"></div><div id="docText">Aucun document.</div><div class="actions"><button id="closeDocsBtn">FERMER</button></div></div></section>
-
-  <section id="ending" class="screen"><div class="panel"><div class="episode">RAPPORT CLASSÉ</div><h1>TRAJECTOIRE W</h1><p id="endingText"></p><button id="againBtn">RECOMMENCER</button></div></section>
-</div>
-<script src="game.js?v=3"></script>
-</body>
-</html>
+  <section id="title" class="screen visible"><div id="titleBg"></div><div class="titleCard"><div class="brand">TENEBRIS</div><div class="protocol">LE PROTOCOLE 9</div><div class="episode">TRAJECTOIRE W</div><p>ETHAN WALKER · SOUTH HARBOR</p><button id="newBtn">NOUVELLE PARTIE</button><button id="continueBtn">CONTINUER</button><button id="helpBtn">COMMANDES</button><small>LH GAMES</small></div></section>
+  <section id="help" class="screen"><div class="panel"><h1>COMMANDES</h1><p><b>TOUCHE LE SOL</b> — Walker rejoint le point accessible le plus proche.</p><p><b>✦ SCINTILLEMENT</b> — objet ou passage interactif.</p><p><b>TOUCHE LE ✦</b> — Walker s'approche et interagit automatiquement.</p><p>Le déplacement suit les zones réellement praticables du décor.</p><button id="backBtn">RETOUR</button></div></section>
+  <main id="game" class="hidden"><div id="scene"><img id="background" alt="Carmona Street"><div class="vignette"></div><div class="scan"></div><div id="walker"><div class="shadow"></div><svg class="walkerSvg" viewBox="0 0 64 132"><defs><linearGradient id="vest" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#31373a"/><stop offset="1" stop-color="#141719"/></linearGradient></defs><ellipse cx="32" cy="14" rx="11" ry="13" fill="#b79a82"/><path d="M21 14q11-16 23-2l-2 7-20-1z" fill="#17191a"/><path d="M18 30 L46 30 51 79 42 91 22 91 13 79z" fill="#1d2326"/><path d="M21 35 L43 35 46 69 18 69z" fill="url(#vest)" stroke="#596268"/><rect x="23" y="43" width="18" height="8" rx="1" fill="#0b0c0d"/><text x="32" y="49" text-anchor="middle" fill="#d6dbd8" font-size="6" font-family="Arial" font-weight="700">UFST</text><path d="M16 35 6 66 13 70 25 44zM48 35 57 62 51 67 39 44z" fill="#202629"/><path d="M23 88 17 126 28 126 34 91zM40 88 47 126 36 126 31 91z" fill="#171b1d"/><path d="M15 126h14v6H12zM35 126h14l3 6H35z" fill="#0a0b0c"/><path d="M48 57 61 69 58 73 44 65z" fill="#090a0a"/><rect x="55" y="68" width="8" height="3" rx="1" fill="#33383a"/></svg></div><div id="sparkles"></div><div id="tapMark"></div><div id="fade"></div></div><header id="hud"><div class="leftHud"><b>SOUTH HARBOR — CARMONA</b><span>ETHAN WALKER · UFST</span></div><div class="objective"><small>OBJECTIF</small><b id="objective">Inspecter les indices qui scintillent.</b><span id="progress">0 / 3 indices</span></div></header><div id="contextHint">Les éléments importants produisent un bref éclat blanc.</div><button id="invBtn" class="invBtn">DOSSIER</button></main>
+  <section id="dialog" class="hidden"><b id="speaker"></b><span id="dialogText"></span><small>TOUCHER POUR CONTINUER</small></section>
+  <section id="inventory" class="overlay hidden"><div class="panel"><h2>DOSSIER WALKER</h2><div id="docs"></div><div id="docText">Aucun document sélectionné.</div><button id="closeInv">FERMER</button></div></section>
+  <section id="ending" class="screen"><div class="panel"><div class="episode">CARMONA</div><h1>LA TRAJECTOIRE CONTINUE</h1><p>Le dossier de Walker relie désormais Carmona à Morrow, chambre 3. Quelqu'un avait préparé ce chemin avant son arrivée.</p><button id="againBtn">REJOUER LA SCÈNE</button></div></section>
+</div><script src="game.js?v=4"></script></body></html>
