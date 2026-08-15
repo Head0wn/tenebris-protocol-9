@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#050706">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>TENEBRIS — Trajectoire W</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="game" width="480" height="270"></canvas>
+  <div class="scan"></div><div class="grain"></div>
+  <div id="rotate">TOURNE TON TÉLÉPHONE<small>TENEBRIS se joue en paysage</small></div>
+
+  <section id="title" class="screen">
+    <div class="brand">TENEBRIS<span>LE PROTOCOLE 9</span></div>
+    <div class="sub">TRAJECTOIRE W</div>
+    <div class="menu">
+      <button id="newBtn" type="button">NOUVELLE PARTIE</button>
+      <button id="continueBtn" type="button">CONTINUER</button>
+      <button id="helpBtn" type="button">COMMANDES</button>
+    </div>
+    <p>LH GAMES · ÉPISODE MOBILE<br>Une nuit absente du rapport du sergent Ethan Walker.</p>
+  </section>
+
+  <section id="help" class="screen hidden">
+    <h1>COMMANDES</h1>
+    <div class="helptext"><b>JOYSTICK</b> — marcher / tourner<br><b>COURIR</b> — maintenir<br><b>VISER</b> — maintenir<br><b>ACTION</b> — interagir / tirer en visant<br><b>INV</b> — inventaire, soins, documents<br><br>Caméras fixes, munitions limitées et sauvegarde locale.</div>
+    <button id="backBtn" type="button">RETOUR</button>
+  </section>
+
+  <div id="hud" class="hidden">
+    <div class="status"><b>WALKER</b><div class="hp"><i id="hpbar"></i></div><span id="hptext">STABLE</span></div>
+    <div id="location"></div><div id="objective"></div>
+    <div class="ammo"><strong id="ammo">12 / 24</strong><span>PISTOLET UFST</span></div>
+  </div>
+
+  <div id="controls" class="hidden">
+    <div id="stick"><div class="base"></div><div id="knob"></div></div>
+    <div class="actions">
+      <button id="actBtn" class="round big" type="button">ACTION</button>
+      <button id="aimBtn" class="round aim" type="button">VISER</button>
+      <button id="runBtn" class="round run" type="button">COURIR</button>
+      <button id="invBtn" class="round inv" type="button">INV</button>
+    </div>
+  </div>
+
+  <div id="dialog" class="hidden"><b id="speaker"></b><span id="dialogText"></span><small>TOUCHER POUR CONTINUER</small></div>
+
+  <section id="inventory" class="overlay hidden">
+    <h2>INVENTAIRE</h2><div id="slots"></div><div id="desc">Sélectionne un objet.</div>
+    <div class="row"><button id="useBtn" type="button">UTILISER</button><button id="closeInv" type="button">RETOUR</button></div>
+  </section>
+
+  <section id="ending" class="screen hidden">
+    <div class="sub">RAPPORT CLASSÉ</div><div id="rank">A</div><div id="stats"></div>
+    <button id="againBtn" type="button">RECOMMENCER</button>
+  </section>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
